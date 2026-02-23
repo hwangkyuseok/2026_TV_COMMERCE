@@ -1,0 +1,18 @@
+{
+  "menus": ["실시간 추천 채널", "VOD", "키즈", "영화", "스포츠", "쇼핑", "약정"],
+  "recommendedChannels": [
+    { "id": "ch_1", "title": "tvN (추천 1)", "desc": "드라마 · 예능", "badge": "LIVE", "bg": "#2d1a4a" },
+    { "id": "ch_2", "title": "JTBC (추천 2)", "desc": "뉴스 · 드라마", "badge": "LIVE", "bg": "#1a2d4a" }
+  ],
+  "liveHomeShoppingChannels": [
+    { "id": "hs_1", "channelName": "현대홈쇼핑", "currentProgram": "LG 워시콤보", "bg": "#1a2e4a" },
+    { "id": "hs_2", "channelName": "CJ온스타일", "currentProgram": "26SS 3D 아트웍 플로럴 니트 자켓", "bg": "#2e1a4a" },
+    { "id": "hs_3", "channelName": "GS SHOP", "currentProgram": "뼈엔 엠비피 MBP 12개월분", "bg": "#1a4a2e" }
+  ],
+  "products": [
+    { "id": "prod_1", "name": "리오벨 볼륨드 자수 퀼팅 하프코트", "price": 79000 },
+    { "id": "prod_2", "name": "스케쳐스 26SS 여성용 워킹화", "price": 139000 },
+    { "id": "prod_3", "name": "프리미엄 에스프레소 머신", "price": 299000 },
+    { "id": "prod_4", "name": "LG 코드제로 A9S 무선청소기", "price": 699000 }
+  ]
+}

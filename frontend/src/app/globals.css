@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design Tokens ─────────────────────────────────────────────────────── */
+:root {
+  --tv-bg: #0a0a1a;
+  --tv-panel: #111128;
+  --tv-card: #1a1a35;
+  --tv-focus: #00e676;
+  --tv-focus-blue: #00b0ff;
+  --tv-text: #e0e0ff;
+  --tv-muted: #7070a0;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset & Base ───────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--tv-bg);
+  color: var(--tv-text);
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", -apple-system,
+    sans-serif;
+  user-select: none;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar — hidden for TV UI ──────────────────────────────────────── */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Focus Ring Utility (for legacy components) ─────────────────────────── */
+.tv-focused {
+  outline: 2px solid rgba(0, 230, 118, 0.7);
+  outline-offset: 2px;
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.35);
+}
+
+/* ── Card base ──────────────────────────────────────────────────────────── */
+.tv-card {
+  transition: transform var(--transition-smooth),
+    outline var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.tv-card.tv-focused {
+  transform: scale(1.04);
+}
+
+/* ── Keyframe Animations ────────────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(0, 230, 118, 0.6), 0 0 60px rgba(0, 230, 118, 0.2);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Utility animations ─────────────────────────────────────────────────── */
+.animate-slide-up {
+  animation: slide-up 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease both;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
