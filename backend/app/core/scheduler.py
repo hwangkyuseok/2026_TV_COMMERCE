@@ -4,7 +4,7 @@
 main.py 를 건드릴 필요가 없습니다.
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import timezone as pytz_timezone
@@ -20,20 +20,19 @@ def _register_jobs(scheduler: BackgroundScheduler) -> None:
 
     서비스가 늘어나면 이 함수 안에 add_job() 블록을 추가하세요.
     """
-    # ── LG HelloVision 렌탈몰 크롤링 (30분 간격, 기동 즉시 첫 실행) ───────────
-    # next_run_time 을 현재 시각으로 지정하면 interval 잡이 즉시 첫 실행되므로,
-    # 별도의 date 트리거 초기 잡이 불필요합니다.
-    # 단일 잡 ID 로 관리하므로 max_instances=1 이 기동 직후 실행에도 적용됩니다.
+    # ── LG HelloVision 렌탈몰 크롤링 (30분 간격) ─────────────────────────────
+    # next_run_time 을 30초 후로 설정: 서버가 완전히 기동된 후 크롤링 시작.
+    # (즉시 실행 시 uvicorn --reload 재시작 오버헤드와 겹쳐 요청 실패 가능)
     scheduler.add_job(
         run_scrape,
         trigger="interval",
         minutes=30,
         id="hellovision_scraper",
         name="LG HelloVision 렌탈몰 크롤링",
-        max_instances=1,                    # 동시 중복 실행 방지
-        coalesce=True,                      # 밀린 잡은 1회만 실행
-        misfire_grace_time=60,             # 60초 이내 지연은 허용
-        next_run_time=datetime.now(_KST),  # 앱 기동 직후 즉시 첫 실행
+        max_instances=1,                                    # 동시 중복 실행 방지
+        coalesce=True,                                      # 밀린 잡은 1회만 실행
+        misfire_grace_time=60,                             # 60초 이내 지연은 허용
+        next_run_time=datetime.now(_KST) + timedelta(seconds=30),  # 30초 후 첫 실행
     )
 
     # ── 추후 서비스 추가 예시 ──────────────────────────────────────────────────
