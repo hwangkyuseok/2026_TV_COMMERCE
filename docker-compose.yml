@@ -1,5 +1,11 @@
 version: "3.9"
 
+# ============================================================
+# 원격 Docker 서버 배포용 구성
+# 소스코드는 이미지 빌드 시 COPY로 포함됩니다.
+# DB는 원격 Docker 서버에서 이미 실행 중인 Docker 컨테이너를 사용합니다.
+# ============================================================
+
 services:
   backend:
     build:
@@ -7,11 +13,18 @@ services:
       dockerfile: backend/Dockerfile
     container_name: tv_commerce_backend
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT:-8000}:8000"
     volumes:
-      # Hot-reload: mount source during dev
-      - ./backend/app:/code/app:ro
-      - ./mock_data.json:/code/mock_data.json:ro
+      # 크롤링 결과물(이미지·로그·영상)을 원격 서버에 영구 보존
+      # named volume → 원격 서버의 /var/lib/docker/volumes/ 하위에 저장됨
+      # - hellovision_data:/app/HelloVision
+      # Named Volume 대신 실제 서버 경로를 직접 연결합니다.
+      # [서버 실제 경로]:[컨테이너 내부 경로]
+      - /app/HelloVision/img/rental:/app/HelloVision/img/rental
+    environment:
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - DATABASE_URL=${DATABASE_URL}
+      - HELLOVISION_DATA_DIR=/app/HelloVision
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -24,13 +37,20 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: http://backend:8000
+        # NEXT_PUBLIC_API_URL: 브라우저가 실제로 요청을 보내는 주소 (서버 공인 IP/도메인)
+        # .env 파일에 NEXT_PUBLIC_API_URL=http://<서버IP>:8000 형태로 반드시 지정하세요.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     container_name: tv_commerce_frontend
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT:-3000}:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8000
+      # NEXT_PUBLIC_API_URL: .env 파일에서 주입 (서버 IP/도메인 포함)
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     depends_on:
       backend:
         condition: service_healthy
     restart: unless-stopped
+
+# volumes:
+#   # 원격 서버에 데이터 영구 보존
+#   hellovision_data:

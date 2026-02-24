@@ -36,8 +36,12 @@ pnpm-debug.log*
 # ======================
 .env
 .env.*
+!.env.example
 .env.local
 .env.*.local
+.env.prod
+.env.dev
+.env.test
 
 # ======================
 # Docker
@@ -94,3 +98,16 @@ desktop.ini
 *.bak
 *.tmp
 *.temp
+
+# ======================
+# HelloVision
+# ======================
+HelloVision/img/**
+HelloVision/sample_data.json
+HelloVision/table_schema.md
+HelloVision/log/**
+
+# ======================
+# template
+# ======================
+/document/template/
